@@ -117,3 +117,47 @@ A term can be removed from the database with the retract command; e.g.,
 ```
 The Spinner database is not a relational database of rows and columns, but rather a store of JSON statements.  In other words, it is a *document-oriented database* also called a *NoSQL database*.
 
+## Production Rules
+
+It is frequently the case that one term implies many others.  For example, when we assert a character is a bear, we might also want to assert that that character has fur, teeth and claws.  To do so in the Spinner database, one can write a *production rule*.  At the top of the production rules is term to be matched.  If a new assertion matches the top of the rule, then the other terms listed in the rule (the consequents) are also asserted into the database.
+```JavaScript
+{"-->": {"is": {"performer": "?bear", "role": "bear"},
+         "consequents": [{"possesses": {"owner": "?bear", "possession": "fur"}},
+                         {"possesses": {"owner": "?bear", "possession": "claws"}},
+                         {"possesses": {"owner": "?bear", "possession": "teeth"}}]}}
+```
+One production rule can trigger another.  So, for example, we might have one rule that states that if someone is a bear, they are also a mammal.  And, then a second rule that states that if someone is a mammal, they are also warm blooded.  If such was the case, asserting that Josephine is a bear would result in the additional assertions that she is a mammal and that she is warm blooded. 
+
+## Deduction Rules
+
+One might state that Josephine is at the cave using a term like this:
+```JavaScript
+{"positioned": {"theme": "Josephine", "goal": "cave"}}
+```
+And, that Josephine is carrying a fish could be expressed like this:
+```JavaScript
+{"carries": {"agent": "Josephine", "theme": "fish"}}
+```
+But, then where is the fish?  You and I know that, since Josphine is carrying it, the fish is wherever Josephine is.  One could devise a means to update the position of everything a character is carrying every time a character moves, or one could write a deduction rule so that the position of a carried item could be deduced when needed.  Here is a deduction rule to do that.  It states that if a character is carrying something, then that something is positioned at the same place as the character.
+```JavaScript
+{"<--": {"positioned": {"theme": "?x", "goal": "?place"},
+	       "and": [{"carries": {"agent": "?character", "theme": "?x"}},
+                 {"positioned": {"theme": "?character", "goal": "?place"}}]}}
+```
+Deduction rules start with an arrow that points to the left (<--) while production rules start with an arrow pointing to the right (-->).  Production rules cause a set of assertions to be added to the database (the consequents of the rule).  Deduction rules do not assert anything into the database.  They simply determine if a term can be deduced from the terms that are already in the database.  The conclusion of a deduction rule is listed first.  The body of the rule is listed second following the *“and”*.  The body of the rule is simply a list of queries into the database (i.e., a conjunctive query).  If all of the queries in the body of the rule return successfully, then the conclusion of the rule is said to be *true*.  Note that the body of the rule can call other deduction rules.
+
+Also, deduction rules can have multiple definitions, thus providing alternative ways of deducing a term.  For example, in addition to the rule above, one might also state that if someone is a bear, then it can be assumed that they are in the cave:
+```JavaScript
+{"<--": {"positioned": {"theme": "?x", "goal": "cave"},
+	       "and": [{"is": {"performer": "?x", "role": "bear"}}]}}
+```
+The addition of such a rule may allow us to deduce that Josphine is in several different places.  This may be useful if we are trying to generate possible places to look for her.  Or, it may be problematic if no characters are suppose to be in two places at once.  It all depends upon what the other rules look like; i.e., the other rules that employ these rules.
+
+In computer science terms, the Spinner deduction rules are implemented using a form of Horn clause resolution (Robinson, 1965) and so the Spinner database rules are essentially the same thing as the Prolog logic programming language, a programming language invented in the 1970s (Colmerauer and Roussel, 1993).
+
+Consequently, five of the eight key criteria for Tale-Spin-like story generators can be encapsulated in a programming language interpreter that is essentially an implementation of a logic programming language, like Prolog.  It allows one to 
+1. assert statements into a database;
+2. retract statements from a database;
+3. query a database;
+4. compose deduction rules; and,
+5. compose production rules.    
