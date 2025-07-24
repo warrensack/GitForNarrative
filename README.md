@@ -141,7 +141,7 @@ And, that Josephine is carrying a fish could be expressed like this:
 But, then where is the fish?  You and I know that, since Josphine is carrying it, the fish is wherever Josephine is.  One could devise a means to update the position of everything a character is carrying every time a character moves, or one could write a deduction rule so that the position of a carried item could be deduced when needed.  Here is a deduction rule to do that.  It states that if a character is carrying something, then that something is positioned at the same place as the character.
 ```JavaScript
 {"<--": {"positioned": {"theme": "?x", "goal": "?place"},
-	       "and": [{"carries": {"agent": "?character", "theme": "?x"}},
+	 "and": [{"carries": {"agent": "?character", "theme": "?x"}},
                  {"positioned": {"theme": "?character", "goal": "?place"}}]}}
 ```
 Deduction rules start with an arrow that points to the left (<--) while production rules start with an arrow pointing to the right (-->).  Production rules cause a set of assertions to be added to the database (the consequents of the rule).  Deduction rules do not assert anything into the database.  They simply determine if a term can be deduced from the terms that are already in the database.  The conclusion of a deduction rule is listed first.  The body of the rule is listed second following the *“and”*.  The body of the rule is simply a list of queries into the database (i.e., a conjunctive query).  If all of the queries in the body of the rule return successfully, then the conclusion of the rule is said to be *true*.  Note that the body of the rule can call other deduction rules.
@@ -149,7 +149,7 @@ Deduction rules start with an arrow that points to the left (<--) while producti
 Also, deduction rules can have multiple definitions, thus providing alternative ways of deducing a term.  For example, in addition to the rule above, one might also state that if someone is a bear, then it can be assumed that they are in the cave:
 ```JavaScript
 {"<--": {"positioned": {"theme": "?x", "goal": "cave"},
-	       "and": [{"is": {"performer": "?x", "role": "bear"}}]}}
+	 "and": [{"is": {"performer": "?x", "role": "bear"}}]}}
 ```
 The addition of such a rule may allow us to deduce that Josphine is in several different places.  This may be useful if we are trying to generate possible places to look for her.  Or, it may be problematic if no characters are suppose to be in two places at once.  It all depends upon what the other rules look like; i.e., the other rules that employ these rules.
 
