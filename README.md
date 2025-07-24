@@ -165,37 +165,49 @@ Consequently, five of the eight key criteria for Tale-Spin-like story generators
 ## Planning
 
 What remains of our list of criteria are these: the means to 
-6. define actions; 
-7. define methods; and, 
-8. define alternatives (i.e., disjuncts of actions or methods).  
-Recall that these actions and methods are the core of what Meehan saw as the core of his project: to implement a new theory of planning (Meehan, 1976, p. 39).  Furthermore, Meehan saw planning in Tale-Spin as a cognitive simulation, a step-by-step copy of how people go about the task of creating a story.  This claim – that Tale-Spin is a cognitive simulation – was taken seriously when it was made in the 1970s.  Today, this claim would be a tough sell in the journal of Cognitive Science (a journal which Roger Schank co-founded).
-	However, the Abelson’s and Sussman’s path of metalinguistic abstraction provides us with a different possibility.  The question posed is not this: What does a cognitive simulation of storytelling look like?  Instead, the question to be asked is this: In what sort of a programming language can processes (specifically, methods and actions) be written so that Tale-Spin-like stories can be computed?  Meehan’s answer to this question, and the answer still current in the literature of narrative intelligence is this: a planning language is the right choice in which to write a story generator.
-	Following Meehan and then two other students of Roger Schank: Natalie Dehn (see Dehn, 1981) and Michael Lebowitz, a few years later (see Lebowitz, 1987) an extensive literature has grown around the idea that stories are best represented as plans where plans are sequences of actions that have an expected outcome (see, for example, Young, 1999; Riedl and Young, 2004).  
 
-The history of this literature was quickly sketched in a recent paper: “With the development of new media, such as Interactive Storytelling (IS) and computer games, a major new application area for AI planning is emerging. In this area, planning technology is used to generate narratives for entertainment systems that feature 3D interactive presentation of the narrative using animations. This approach has its roots in the adoption of planning as a technology for virtual agents which was later transferred to reasoning about virtual actors (Geib, 1994). It was ﬁrst proposed for IS in (Young, 2000) and since then it has emerged as the core technology for IS prototype systems (Cavazza, et al., 2007;Riedl and Young, 2010). In addition, planning has been used in recent computer games, including FEAR and KILLZONE, for controlling the behaviour of non-player characters” (Porteous et al., 2011).
-Cavazza and Pizzi have also written a concise introduction to narratology for artificial intelligence researchers (Cavazza and Pizzi, 2006).  So, why is this seen as a natural fit from a technologist’s point of view?  I.e., the fit between planning and narratives?  Recall the short definition of narrative by the narratologist Gerald Prince cited above: “…the recounting of at least two … events … neither of which logically presupposes or entails the other” (Prince, 2003, p. X).  And, what causes an event?  Some action is usually the cause of an event.  Thus, plans, seen as sequences of actions, if recounted in the past tense, might be considered to be a good representation of story plots, which are sequences of events.
-In the literature of AI and cognitive science, plans were seen as a cognitive construct at least by the time of the publication of the book Plans and the structure of behavior in 1960 (Miller, Galanter and Pribram, 1960).  They were seen as analogous to, or even equivalent to computer programs (that encode sequences of actions).  The earliest planning algorithms were implemented in the late 1950s and run as computer programs to solve logic puzzles, prove mathematical theorems, and play games, like chess (see Newell, Shaw and Simon, 1959). For a detailed history of planning, see chapter 8 of Phil Agre’s book Computation and Human Experience (Agre, 1997).  In the contemporary literature of planning (cf., Ghallab, Nau and Traverso, 2004) plans are sometimes posited as cognitive constructs, but, more frequently, they are seen simply as a technology.  If one chooses the latter point of view, it is possible to think of planning systems as a genre of programming languages.  This allows one to reconsider Tale-Spin, not as a cognitive simulation, but as a partial implementation of a programming language evaluator, a planner.
-Actions – or as they are more commonly described in the literature, operators – in planning systems are commonly represented using what is called a STRIPS notation (Fikes and Nilsson, 1971).  Actions, in this notation, have (a) a set of preconditions that must be true before the action can take place; (b) a set of additions that are terms asserted into the database after the action has taken place; and, (c) a set of deletions that are terms retracted from the database after the action has taken place.  In JSON, one can write an action like this:
+6. define actions (more commonly called *operators* in the planning literature);
+7. define methods; and,
+8. define alternatives (i.e., disjuncts of actions or methods).
+     
+These actions and methods are the core of what Meehan saw as the core of his project: to implement a new theory of planning (Meehan, 1976, p. 39).  Furthermore, Meehan saw planning in Tale-Spin as a cognitive simulation, a step-by-step copy of how people go about the task of creating a story.  This claim – that Tale-Spin is a cognitive simulation – was taken seriously when it was made in the 1970s.  Today, this claim would be a tough sell in the journal of *Cognitive Science* (a journal which Roger Schank co-founded).
 
+However, the Abelson’s and Sussman’s path of *meta-linguistic abstraction* provides us with a different possibility.  The question posed is not this: What does a cognitive simulation of storytelling look like?  Instead, the question to be asked is this: In what sort of a programming language can processes (specifically, methods and actions) be written so that Tale-Spin-like stories can be computed?  Meehan’s answer to this question, and the answer still persistent in the literature of narrative intelligence is this: a planning language is the right choice in which to write a story generator.  Although, today, of course, one might say that we only need LLMs and nothing more.
+
+Following Meehan and then two other students of Roger Schank: Natalie Dehn (see Dehn, 1981) and Michael Lebowitz, a few years later (see Lebowitz, 1987) an extensive literature has grown around the idea that stories are best represented as plans where plans are sequences of actions that have an expected outcome (see, for example, Young, 1999; Riedl and Young, 2004).  
+
+The history of this literature was quickly sketched in a 2011 paper: “With the development of new media, such as Interactive Storytelling (IS) and computer games, a major new application area for AI planning is emerging. In this area, planning technology is used to generate narratives for entertainment systems that feature 3D interactive presentation of the narrative using animations. This approach has its roots in the adoption of planning as a technology for virtual agents which was later transferred to reasoning about virtual actors (Geib, 1994). It was ﬁrst proposed for IS in (Young, 2000) and since then it has emerged as the core technology for IS prototype systems (Cavazza, et al., 2007; Riedl and Young, 2010). In addition, planning has been used in recent computer games, including FEAR and KILLZONE, for controlling the behaviour of non-player characters” (Porteous et al., 2011).
+
+Cavazza and Pizzi have also written a concise introduction to narratology for artificial intelligence researchers (Cavazza and Pizzi, 2006).  So, why is this seen as a natural fit from a technologist’s point of view?  I.e., the fit between planning and narratives?  Recall the short definition of narrative by the narratologist Gerald Prince (one of Nick Montfort's advisors in graduate school): “…the recounting of at least two … events … neither of which logically presupposes or entails the other” (Prince, 2003, p. X).  And, what causes an event?  Some action is usually the cause of an event.  Thus, plans, seen as sequences of actions, if recounted in the past tense, might be considered to be a good representation of story plots, which are sequences of events.
+
+In the literature of AI and cognitive science, plans were seen as a cognitive construct at least by the time of the publication of the book *Plans and the structure of behavio*r in 1960 (Miller, Galanter and Pribram, 1960).  They were seen as analogous to, or even equivalent to computer programs (that encode sequences of actions).  The earliest planning algorithms were implemented in the late 1950s and run as computer programs to solve logic puzzles, prove mathematical theorems, and play games, like chess (see Newell, Shaw and Simon, 1959). For a detailed history of planning, see chapter 8 of Phil Agre’s book *Computation and Human Experience* (Agre, 1997).  In the literature of AI planning (cf., Ghallab, Nau and Traverso, 2004) plans are sometimes posited as cognitive constructs, but, more frequently, they are seen simply as a technology.
+
+If one chooses the latter point of view, it is possible to think of planning systems as a genre of programming languages.  This allows one to reconsider Tale-Spin, not as a cognitive simulation, but as a partial implementation of a programming language evaluator, a planner.
+
+Actions – or as they are more commonly described in the literature, *operators* – in planning systems are commonly represented using what is called a STRIPS notation (Fikes and Nilsson, 1971).  Actions, in this notation, have
+1. a set of preconditions that must be true before the action can take place;
+2. a set of additions that are terms asserted into the database after the action has taken place; and,
+3. a set of deletions that are terms retracted from the database after the action has taken place.
+
+In JSON, one can write an action like this:
+```JavaScript
 {"action": {"description": "fly from one place to another",
-     "task": {"flies": {"self_mover": "?self_mover", "source": "?source", 
-                              "goal": "?goal"}},
-      "preconditions": [{"capability": {"entity": "?self_mover",
-					        "event": {"flies": {"self_mover": "?self_mover",
-								"source": "?source",
-								 "goal": "?goal"}}}}],
-       "additions": [{"positioned": {"theme": "?self_mover", "goal": "?goal"}},
-                              	    {"believes": {"cognizer": "?self_mover", 
-					 "topic": {"positioned": {"theme": "?self_mover", 
-								 "goal": "?goal"}}}}],
-        "deletions": [{"positioned": {"theme": "?self_mover", "goal": "?source"}},
-                              	    {"believes": {"cognizer": "?self_mover", 
-					 "topic": {"positioned": {"theme": "?self_mover", 
-								  "goal": "?source"}}}}]}}
-
+	    "task": {"flies": {"self_mover": "?self_mover", "source": "?source", "goal": "?goal"}},
+	    "preconditions": [{"capability": {"entity": "?self_mover",
+					      "event": {"flies": {"self_mover": "?self_mover",
+								  "source": "?source",
+								  "goal": "?goal"}}}}],
+	     "additions": [{"positioned": {"theme": "?self_mover", "goal": "?goal"}},
+			   {"believes": {"cognizer": "?self_mover", 
+					 "topic": {"positioned": {"theme": "?self_mover", "goal": "?goal"}}}}],
+	      "deletions": [{"positioned": {"theme": "?self_mover", "goal": "?source"}},
+			    {"believes": {"cognizer": "?self_mover", 
+					 "topic": {"positioned": {"theme": "?self_mover", "goal": "?source"}}}}]}}
+```
 This is an action that describes flying.  To fly a character must be capable of flying.  This precondition is asserted in the production rule associated with the term declaring a character to be a bird and, for instance, is not associated with the production rule executed when a character is declared to be a bear.  When a character flies from a source to a goal, two deletions are retracted from the database: (1) that the character is at the source and (2) that the character thinks it is at the source.  And, two additions are made to the database: (1) that the character is at the goal and (2) that the character thinks it is at the goal.  This action definition, along with many others, is defined in the file spinner.js. 
-	Actions can be organized into sequences.  Such an organization is called a method and is akin to a function definition in most conventional programming languages.  Methods are a means of abstraction and composition in the planner used for Spinner.  Here is a definition of a method for threatening a character in order to acquire something the character possesses.
 
+Actions can be organized into sequences.  Such an organization is called a *method* and is akin to a function definition in most conventional programming languages.  Methods are a means of abstraction and composition in the planner used for Spinner.  Here is a definition of a method for threatening a character in order to acquire something the character possesses.
+```JavaScript
 {"method": {"description": "acquisition of something by threatening",
 	       "task": {"dcont": {"character": "?character", "desire": "?desire"}},
 	        "preconditions": [{"ownerIsKnown": {"cognizer": "?character",
