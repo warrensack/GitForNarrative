@@ -84,3 +84,36 @@ Two terms will not unify if they have a matching pair where the right hand side 
                       {"is": {"performer": "irving", "role": "bear"}},
                       bindings);
 ```
+
+## Database
+
+As is the case for Tale-Spin, facts about the world are recorded as statements in a database.  To create a new instance of the database system, first create a copy of the utilities:
+```JavaScript
+> utils = makeUtilities();
+```
+Then use this command
+```JavaScript
+> ds = makeInterpreter(utils);
+```
+And, initialize the database contents to contain nothing:
+```JavaScript
+> ds.initializeDatabase([]);
+```
+The variable ds contains a database interpreter with a number of commands the three most important of which are assert, retract, and query. These commands are all defined in the llpl.js file.  To record “Josephine is a bear” one could type this to the JavaScript prompt:
+```JavaScript
+> ds.assert({"is": {"performer": "josephine", "role": "bear"}});
+```
+Now, the database can be queried to see who is a bear:
+```JavaScript
+> ds.query({"is": {"performer": "?who", "role": "bear"}});
+```
+And, the response indicates there is only one bear in the database, Josephine:
+```JavaScript
+{"is": {"performer": "josephine", "role": "bear"}}
+```
+A term can be removed from the database with the retract command; e.g.,
+```JavaScript
+> ds.retract({"is": {"performer": "josephine", "role": "bear"}});
+```
+The Spinner database is not a relational database of rows and columns, but rather a store of JSON statements.  In other words, it is a *document-oriented database* also called a *NoSQL database*.
+
