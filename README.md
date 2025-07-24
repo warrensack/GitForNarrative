@@ -301,5 +301,212 @@ Mumbler is used in one other way in the Spinner program.  If the user wants what
 
 To duplicate this “interactivity” in Spinner, the user can replace the function *conjoin* (defined in the file llpl.js) with a different version of conjoin (defined in the file qa.js) which asks the user if a query is true or false after it has been found that the statement is not currently in the database.  If the user answers “yes” the statement is true, the statement is asserted into the database and the planner continues its work.  If the user responds to the qa.conjoin question with “no,” then the statement is recorded as having been negated and the planner continues it work. See the function *interactiveConjoin* defined in the file qa.js for details. The mumbler program is used in render the statements in question into the interrogative before they are printed out in English for the user to respond to.
 
+## Example Stories
 
+In the file initial.js are defined the initial conditions and tasks for six example stories.  For all of the stories, the planner solves two tasks: (1) a character must acquire some food and then (2) eat it.  For example, the tasks for the first five example stories (story1, stpry2, story3, story4, story5) are all the same and are these:
+```JavaScript
+{"tasks": {"ordered": [{"dcont": {"character": "joe", "desire": "honey"}},
+		       {"eats": {"ingestor": "joe", "ingestibles": "honey"}}]}}
+```
+Depending upon the initial conditions, the planner ends up using different actions and methods to accomplish the tasks.  For example, story2 is about Joe stealing the honey from Irving.  The output for this story, like all of the outputs from Spinner, begins with “once upon a time…” followed by a translation of the initial conditions into English, then the statement “one day…” followed by the series of events sequenced by the planner.  In the case of story2, the last half of the output reads like this:
 
+“one day . . . joe wanted to have the honey.  joe wanted to go to honey.  joe wanted to learn the answer to this question: is honey at the elm tree.  joe moved from the cave to the elm tree.  joe walked from the cave to the elm tree.  joe was at the elm tree.  joe believed that joe was at the elm tree.  joe stole the honey from irving.  joe carried the honey.  joe ate the honey.”
+
+In story1, Joe robs Irving of the honey.  Story2 is listed above.  In story3, Irving gives Joe the honey because they are friends (as declared in the initial conditions).  In story4, Joe barters with Irving for the honey.  Joe offers Irving, who is a bird, a worm for the honey.  In story5, Joe threatens to kills Irving if he doesn’t give him the honey.  Irving surrends the honey to Joe.  One can change the output from by editing just the line of code in the file spinner.js comments that reads like this:
+```JavaScript
+db = initialConditions.story6; // change story# here
+```
+Story1 can be replaced with story2, story3, story4, story5, or story6: 
+	
+Story6 is slightly different.  The characters are a fox and a crow rather than, as in the previous examples, a bear and a bird (of no particular type).  The tasks for story6 are these:
+```JavaScript
+{"tasks": {"ordered": [{"dcont": {"character": "master reynard", "desire": "cheese"}},
+		       {"eats": {"ingestor": "master reynard", "ingestibles": "cheese"}}]}}
+```
+Master Reynard, the fox, needs to acquire some cheese and eat it.  Here is the second half (the action!) of the output from Spinner:
+
+“one day . . . master reynard wanted to have the cheese.  master reynard wanted to go to crow.  master reynard moved from the elm tree to the oak tree.  master reynard walked from the elm tree to the oak tree.  master reynard was at the oak tree.  master reynard believed that master reynard was at the oak tree.  master reynard requested crow for crow to sing something to something.  crow believed that master reynard desired crow to sing something to something.  crow sang something to something.  crow dropped the cheese.  cheese was at the oak tree.  crow informed master reynard that something.  master reynard believed that something.  master reynard stole the cheese from crow.  master reynard carried the cheese.  master reynard ate the cheese.”
+
+In other words, the output from story6 is a garbled version of one of Aesop’s fables: “The Fox and the Crow.”
+
+## References
+
+Espen Aarseth, Cybertext: Perspectives on Ergodic Literature (Johns Hopkins UP 1997)
+
+Antti Aarne, The Types of the Folktale: A Classification and Bibliography, The Finnish Academy of Science and Letters, Helsinki, 1961 (originally published in 1910) 
+
+Harold Abelson and Gerald Jay Sussman with Julie Sussman, Structure and Interpretation of Computer Programs, Second Edition, MIT Press, 1996.  Available online: http://mitpress.mit.edu/sicp/full-text/book/book.html
+
+Phil Agre, Computation and Human Experience  (Cambridge University Press, 1997)
+
+Roland Barthes, “Introduction à l’analyse structurale des récits,” Communications 8: 1-27 (1966).
+
+Michael Bratman, David Israel and Martha Pollock "Plans and Resource-Bounded Practical Reasoning," Computational Intelligence 4 (1988):  349-355
+
+Marc Cavazza, David Pizzi. 2006. Narratology for Interactive Storytelling: a Critical Introduction 3rd International Conference on Technologies for Interactive Digital Storytelling and Entertainment, Darmstadt, Germany, December 2006
+
+Cavazza, M.; Lugrin, J.; Pizzi, D.; and Charles, F. 2007. Madame Bovary on the Holodeck: Immersive Interactive Storytelling. In Proc. of the 15th Int. Conf. on Multimedia (ACMMM 2007), 651–660.
+
+Nathanael Chambers and Dan Jurafsk, “Unsupervised Learning of Narrative Schemas and their Participants,” ACL '09 Proceedings of the Joint Conference of the 47th Annual Meeting of the ACL and the 4th International Joint Conference on Natural Language Processing of the AFNLP: Volume 2 (Association for Computational Linguistics Stroudsburg, PA): 602-610
+
+Chomsky, Noam (1957), Syntactic Structures, The Hague/Paris: Mouton
+
+Chomsky, Noam, “On the Notion ‘Rule of Grammar’.” In Roman Jakobson (ed.) Structure of Language and Its Mathematical Aspects. Proc. 12th Symposium in App. Math. Providence, RI: American Mathematical Society, 1961, pp. 6-24
+
+Chomsky, Noam (1995). The Minimalist Program. MIT Press
+
+Codd, E.F. (1970). "A Relational Model of Data for Large Shared Data Banks". Communications of the ACM 13 (6): 377–387).   
+
+Colmerauer, A.; Roussel, A. (1993). "The birth of Prolog". ACM SIGPLAN Notices 28: 37) 
+
+Marc Davis and Michael Travers, “A brief overview of the Narrative Intelligence reading group,” in  Michael Mateas and Phoebe Sengers (Eds.), Narrative Intelligence. Amsterdam: John Benjamins. 2003, pp. 27-40.
+
+Dehn, N. (1981). Story generation after TALE-SPIN. In Proceedings of the 7th International Joint Conference on Articial Intelligence, pp. 16-18
+
+Gerald DeJong. Skimming stories in real time. PhD dissertation, Yale University, 1979.
+
+Émile Durkheim, The Rules of the Sociological Method, (Edited by Steven Lukes; translated by W.D. Halls). New York: Free Press, 1982
+
+Umberto Eco,The Search for the Perfect Language (Wiley-Blackwell, 1995)
+
+Dwight Eisenhower (Public Papers of the Presidents of the United States, Dwight D. Eisenhower, 1957, National Archives and Records Service, Government Printing Office, p. 818).
+
+R. Fikes and N. Nilsson (1971). STRIPS: a new approach to the application of theorem proving to problem solving. Artificial Intelligence, 2:189-208
+
+Fillmore, C. J. (1968). The case for case. In Bach, E. and Harms, R., editors, Universals in Linguistic Theory. Holt, Rinehart & Winston, New York 
+
+Nicoletta Fornara, Francesco Vigano, Mario Verdicchio, Marco Colombetti, “Artificial institutions: a model of institutional reality for open multiagent systems,” Artif Intell Law (2008) 16:89–105
+
+Geib, C. W. 1994. The Intentional Planning System: It-PlanS. In Proceedings of the 2nd Int. Conf. on Artiﬁcial Intelligence Planning Systems (AIPS-94).
+
+Malik Ghallab, Dana Nau, Paolo Traverso, Automated Planning: Theory & Practice (Morgan Kaufmann, 2004) 
+
+Greimas (1973) "Actants, Actors, and Figures." On Meaning: Selected Writings in Semiotic Theory. Trans. Paul J. Perron and Frank H, Collins. Theory and History of Literature, 38. Minneapolis: U of Minnesota P, 1987. 106-120
+
+John Haugeland, Artificial Intelligence: The Very Idea (MIT Press, 1985)
+
+Eric Havelock, Preface to Plato (Harvard University Press, 1963)
+
+James Hendler, Avoiding another AI Winter, IEEE Intelligent Systems (March/April 2008 (Vol. 23, No. 2) pp. 2-4).  
+
+Carl Hewitt , “What Is Commitment? Physical, Organizational, and Social (Revised),” in P. Noriega et al. (Eds.): COIN 2006 Workshops, LNAI 4386, pp. 293–307, Springer-Verlag Berlin Heidelberg 2007
+
+Fredric Jameson, The Prison-House of Language: A Critical Account of Structuralism and Russian Formalism (Princeton: Princeton University Press. 1972).
+
+Jennings, N.R.: Commitments and conventions: The foundation of coordination in multi-agent systems. The Knowledge Engineering Review 8(3), 223–250 (1993)
+
+Kelly, J. P.; Botea, A.; and Koenig, S. 2007. Planning with Hierarchical Task Networks in Video Games. In Proceedings of the ICAPS-07 Workshop on Planning in Games
+
+Klein, S., Aeschliman, Applebaum, Balsisger, Curtis, Foster, Kalish, Kamin, Lee & Price 1976. “Simulation d'hypothèses émisés par Propp et Lévi-Strauss en utilisant un système de simulation meta-symbolique.” Informatique et Sciences Humaines, No. 28, pp. 63-133, Mars. [A revised and expanded French translation of 'Modelling Propp and Lévi-Strauss in a Meta-symbolic Simulation System.' in Patterns in Oral Literature, edited by H. Jason & D. Segal, World Anthropology Series, The Hague: Mouton, 1977]; also accessible on the web here: http://www.cs.wisc.edu/~sklein/Simulation-Meta-Symbolique%20d%27Hypotheses-Propp%20&%20Levi-Strauss.pdf
+
+Lakoff, George, “Structural Complexity in Fairy Tales,” The Study of Man, Vol. 1 (1972), 128-150; also available at Lakoff’s website: http://georgelakoff.files.wordpress.com/2010/12/structural-complexity-in-fairy-tales-lakoff-1972.pdf
+
+George Lakoff and Srini Narayanan, “Toward a Computational Model of Narrative,” Computational Models of Narrative: Papers from the AAAI Fall Symposium (FS-10-04)).
+
+Lebowitz, M. 1987. Planning stories. In Proceedings of the 9th Annual Conference of the Cognitive Science Society
+
+Law, John, and John Hassard. 1999. Actor network theory and after. Oxford [England]: Blackwell/Sociological Review).
+
+Lévi-Stauss, Claude, “The Structural Study of Myth,” in Structural Anthropology (New York: Basic Books, 1963): 210.
+
+Lévi-Stauss, Claude, Mythologiques 1: Le cru et le cuit. Paris: Plon, 1964. 
+
+Lévi-Stauss, Claude, Mythologiques 2: Du miel aux cendres. Paris: Plon, 1966. 
+
+Lévi-Stauss, Claude, Mythologiques 3: L’origine des Manières de Table. Paris: Plon, 1968. 
+
+Lévi-Stauss, Claude, Mythologiques 4: L’Homme nu. Paris: Plon, 1971.
+
+Lévi-Stauss, Claude, 1983, The Raw and the Cooked: Mythologiques, Volume 1, Chicago: University of Chicago Press
+
+Lévi-Stauss, Claude, “Structure and Form: Reflections on a work by Vladimir Propp,” in Propp, Vladimir. Theory and History of Folklore. Ed. Anatoly Liberman. University of Minnesota: University of Minnesota Press, 1984.
+
+John Lyons, Semantics, Volume 1 (Cambridge University Press, 1977)
+
+John Lyons, Semantics, Volume 2 (Cambridge University Press, 1977)
+
+Jill Mann, From Aesop to Reynard, Beast Literature in Medieval Britain (Oxford University Press, 2009
+
+Lev Manovich, “Database as Symbolic Form,” Convergence June 1999 vol. 5 no. 2 80-99.
+
+Michael Mateas and Phoebe Sengers (Eds.), Narrative Intelligence. Amsterdam: John Benjamins. 2003
+
+Michael Mateas, Paul Vanouse and Steffi Domike, “Terminal Time: An ideologically-biased history machine.” AISB Quarterly, Special Issue on Creativity in the Arts and Sciences, number 102, 1999, pages 36-43
+
+Marshall McLuhan, The Gutenberg galaxy: the making of typographic man (University of Toronto Press, 1962)
+
+James Meehan, The Metanovel: Writing Stories by Computer, PhD dissertation, Yale University, 1976
+
+James Meehan, The New UCI Lisp Manual (Lawrence Erlbaum Assoc Inc, 1979)
+
+James Meehan, “Tale-Spin,” in Roger Schank and Christopher Riesbeck (editors), Inside Computer Understanding: Five Programs Plus Miniatures Hillsdale, New Jersey: Lawrence Erlbaum Associates. 1981.
+
+Miller, George; Galanter, Eugene, & Pribram, Karl (1960). Plans and the structure of behavior. New York: Holt, Rinehart and Winston
+
+Montfort, Nick. "Curveship's Automatic Narrative Variation." Proceedings of the 6th International Conference on the Foundations of Digital Games (FDG '11), pp. 211-218, Bordeaux, France. 29 June-1 July 2011
+
+Munindar P. Singh and Michael N. Huhns, Service-Oriented Computing: Semantics, Processes, Agents (John Wiley & Sons, Ltd., 2005
+
+Janet Murray, Hamlet on the Holodeck: The Future of Narrative in Cyberspace (Free Press, 1997; MIT Press 1998
+
+Nau, D, et al, SHOP2: An HTN Planning System, Journal of Artificial Intelligence Research 20 (2003) 379-404).  
+
+Newell, A.; Shaw, J.C.; Simon, H.A. (1959). Report on a general problem-solving program. Proceedings of the International Conference on Information Processing. pp. 256-264
+
+Nilsson, N., Problem-Solving Methods in Artificial Intelligence, New York: McGraw-Hill, 1971).
+
+Douglass North, Institutions, Institutional Change and Economic Performance (Cambridge University Press: Cambridge, UK, 1990
+
+Jean-François Lyotard, The Postmodern Condition: A Report on Knowledge (University of Minnesota Press, 1979)
+
+Sheldon Pollock, “Future Philology? The Fate of a Soft Science in a Hard World,” Critical Inquiry 35 (Summer 2009): 931-961
+
+Julie Porteous, Jonathan Teutenberg, David Pizzi and Marc Cavazza, “Visual Programming of Plan Dynamics using Constraints and Landmarks,” in Proceedings of the 21st International Conference on Automated Planning and Scheduling (ICAPS), Freiburg, Germany, June 2011
+
+Gerald Prince, A Dictionary of Narratology, Revised Edition (University of Nebraska Press, 2003)
+
+Vladimir  Propp (author), Louis A. Wagner (Editor), Laurence Scott (Translator) Morphology of the Folktale, 2nd edition, (Publications of the American Folklore Society) (University of Texas Press, 1968)
+
+Riedl, M. O., and Young, R. M. 2004. An Intent-Driven Planner for Multi-Agent Story Generation. In Proceedings of the 3rd International Conference on Autonomous Agents and Multi-Agent Systems (AAMAS). 
+
+Mark O. Riedl and R. Michael Young. Narrative Planning: Balancing Plot and Character. Journal of Artificial Intelligence Research, vol. 39, 2010
+
+Christopher K. Riesbeck and Roger C. Schank (editors), Inside Case-Based Reasoning (Psychology Press, 1989).
+
+Robinson J. A. "A Machine-Oriented Logic Based on the Resolution Principle." J. Assoc. Comput. Mach. 12, 23-41, 1965
+
+Josef Ruppenhofer, Michael Ellsworth, Miriam R. L. Petruck, Christopher R. Johnson, Jan Scheffczyk, FrameNet II: Extended Theory and Practice, 2010, available online: http://framenet2.icsi.berkeley.edu/index.php?option=com_wrapper&Itemid=126
+
+Marie-Laure Ryan, Possible Worlds, Artificial Intelligence and Narrative Theory (Bloomington: Indiana University Press, 1991
+
+Warren Sack and Marc Davis, "IDIC: Assembling Video Sequences from Story Plans and Content Annotations," in Proceedings of the IEEE International Conference on Multimedia Computing and Systems, Boston, MA, May 14-19, 1994.
+
+Schank, R. (1972). Conceptual dependency: A theory of natural language understanding. Cognitive Psychology 3 (4): 552-631
+
+Roger Schank and Robert Abelson, Scripts, Plans, Goals and Understanding: an Inquiry into Human Knowledge Structures (Hillsdale, NJ: Erlbaum, 1977)
+
+Roger C. Schank, Alex Kass and Christopher K. Riesbeck (editors) Inside Case-Based Explanation (Psychology Press, 1994)
+
+Roger Schank and Christopher Riesbeck (editors), Inside Computer Understanding: Five Programs Plus Miniatures Hillsdale, New Jersey: Lawrence Erlbaum Associates. 1981.
+
+Searle, John R. Speech Acts: An Essay in the Philosophy of Language. London: Cambridge University Press, 1969
+
+John Searle, Making the Social World: The Structure of Human Civilization (Oxford University Press: Oxford, UK, 2010
+
+Searle, John R., and Daniel Vanderveken. 1985. Foundations of illocutionary logic. Cambridge [Cambridgeshire]: Cambridge University Press
+
+Guy L. Steele, Common Lisp: The Language, 2nd Edition (Woburn, MA: Digital Press, 1990).
+
+Christina R. Strong and Michael Mateas. Talking with NPCs: Towards dynamic generation of discourse structures. In Proceedings of the 4th Artificial Intelligence and Interactive Digital Entertainment Conference (AIIDE 2008), Palo Alto, California, October 2008
+
+Uther, Hans-Jörg, The Types of International Folktales: A Classification and Bibliography. Based on the system of Antti Aarne and Stith Thompson. FF Communications no. 284–286. Helsinki: Suomalainen Tiedeakatemia, 2004. Three volumes.
+
+Vanderveken, Daniel. 1990. Meaning and speech acts. Cambridge [England]: Cambridge University Press 
+
+Winograd, Terry, and Fernando Flores. Understanding Computers and Cognition: A New Foundation for Design. Norwood, N.J: Ablex Pub. Corp, 1986)
+
+Noah Wardrip-Fruin, Expressive Processing: Digital Fictions, Computer Games, and Software Studies (MIT Press, 2009).
+
+Young, R. 1999. Notes on the use of plan structures in the creation of interactive plot. In Proceedings of the AAAI; 
+
+Young, R. M. 2000a. Creating Interactive Narrative Structures: The Potential for AI Approaches. In AAAI Spring Symposium in Artiﬁcial Intelligence and Entertainment. AAAI Press
