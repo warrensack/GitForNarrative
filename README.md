@@ -160,4 +160,66 @@ Consequently, five of the eight key criteria for Tale-Spin-like story generators
 2. retract statements from a database;
 3. query a database;
 4. compose deduction rules; and,
-5. compose production rules.    
+5. compose production rules.
+
+## Planning
+
+What remains of our list of criteria are these: the means to 
+6. define actions; 
+7. define methods; and, 
+8. define alternatives (i.e., disjuncts of actions or methods).  
+Recall that these actions and methods are the core of what Meehan saw as the core of his project: to implement a new theory of planning (Meehan, 1976, p. 39).  Furthermore, Meehan saw planning in Tale-Spin as a cognitive simulation, a step-by-step copy of how people go about the task of creating a story.  This claim – that Tale-Spin is a cognitive simulation – was taken seriously when it was made in the 1970s.  Today, this claim would be a tough sell in the journal of Cognitive Science (a journal which Roger Schank co-founded).
+	However, the Abelson’s and Sussman’s path of metalinguistic abstraction provides us with a different possibility.  The question posed is not this: What does a cognitive simulation of storytelling look like?  Instead, the question to be asked is this: In what sort of a programming language can processes (specifically, methods and actions) be written so that Tale-Spin-like stories can be computed?  Meehan’s answer to this question, and the answer still current in the literature of narrative intelligence is this: a planning language is the right choice in which to write a story generator.
+	Following Meehan and then two other students of Roger Schank: Natalie Dehn (see Dehn, 1981) and Michael Lebowitz, a few years later (see Lebowitz, 1987) an extensive literature has grown around the idea that stories are best represented as plans where plans are sequences of actions that have an expected outcome (see, for example, Young, 1999; Riedl and Young, 2004).  
+
+The history of this literature was quickly sketched in a recent paper: “With the development of new media, such as Interactive Storytelling (IS) and computer games, a major new application area for AI planning is emerging. In this area, planning technology is used to generate narratives for entertainment systems that feature 3D interactive presentation of the narrative using animations. This approach has its roots in the adoption of planning as a technology for virtual agents which was later transferred to reasoning about virtual actors (Geib, 1994). It was ﬁrst proposed for IS in (Young, 2000) and since then it has emerged as the core technology for IS prototype systems (Cavazza, et al., 2007;Riedl and Young, 2010). In addition, planning has been used in recent computer games, including FEAR and KILLZONE, for controlling the behaviour of non-player characters” (Porteous et al., 2011).
+Cavazza and Pizzi have also written a concise introduction to narratology for artificial intelligence researchers (Cavazza and Pizzi, 2006).  So, why is this seen as a natural fit from a technologist’s point of view?  I.e., the fit between planning and narratives?  Recall the short definition of narrative by the narratologist Gerald Prince cited above: “…the recounting of at least two … events … neither of which logically presupposes or entails the other” (Prince, 2003, p. X).  And, what causes an event?  Some action is usually the cause of an event.  Thus, plans, seen as sequences of actions, if recounted in the past tense, might be considered to be a good representation of story plots, which are sequences of events.
+In the literature of AI and cognitive science, plans were seen as a cognitive construct at least by the time of the publication of the book Plans and the structure of behavior in 1960 (Miller, Galanter and Pribram, 1960).  They were seen as analogous to, or even equivalent to computer programs (that encode sequences of actions).  The earliest planning algorithms were implemented in the late 1950s and run as computer programs to solve logic puzzles, prove mathematical theorems, and play games, like chess (see Newell, Shaw and Simon, 1959). For a detailed history of planning, see chapter 8 of Phil Agre’s book Computation and Human Experience (Agre, 1997).  In the contemporary literature of planning (cf., Ghallab, Nau and Traverso, 2004) plans are sometimes posited as cognitive constructs, but, more frequently, they are seen simply as a technology.  If one chooses the latter point of view, it is possible to think of planning systems as a genre of programming languages.  This allows one to reconsider Tale-Spin, not as a cognitive simulation, but as a partial implementation of a programming language evaluator, a planner.
+Actions – or as they are more commonly described in the literature, operators – in planning systems are commonly represented using what is called a STRIPS notation (Fikes and Nilsson, 1971).  Actions, in this notation, have (a) a set of preconditions that must be true before the action can take place; (b) a set of additions that are terms asserted into the database after the action has taken place; and, (c) a set of deletions that are terms retracted from the database after the action has taken place.  In JSON, one can write an action like this:
+
+{"action": {"description": "fly from one place to another",
+     "task": {"flies": {"self_mover": "?self_mover", "source": "?source", 
+                              "goal": "?goal"}},
+      "preconditions": [{"capability": {"entity": "?self_mover",
+					        "event": {"flies": {"self_mover": "?self_mover",
+								"source": "?source",
+								 "goal": "?goal"}}}}],
+       "additions": [{"positioned": {"theme": "?self_mover", "goal": "?goal"}},
+                              	    {"believes": {"cognizer": "?self_mover", 
+					 "topic": {"positioned": {"theme": "?self_mover", 
+								 "goal": "?goal"}}}}],
+        "deletions": [{"positioned": {"theme": "?self_mover", "goal": "?source"}},
+                              	    {"believes": {"cognizer": "?self_mover", 
+					 "topic": {"positioned": {"theme": "?self_mover", 
+								  "goal": "?source"}}}}]}}
+
+This is an action that describes flying.  To fly a character must be capable of flying.  This precondition is asserted in the production rule associated with the term declaring a character to be a bird and, for instance, is not associated with the production rule executed when a character is declared to be a bear.  When a character flies from a source to a goal, two deletions are retracted from the database: (1) that the character is at the source and (2) that the character thinks it is at the source.  And, two additions are made to the database: (1) that the character is at the goal and (2) that the character thinks it is at the goal.  This action definition, along with many others, is defined in the file spinner.js. 
+	Actions can be organized into sequences.  Such an organization is called a method and is akin to a function definition in most conventional programming languages.  Methods are a means of abstraction and composition in the planner used for Spinner.  Here is a definition of a method for threatening a character in order to acquire something the character possesses.
+
+{"method": {"description": "acquisition of something by threatening",
+	       "task": {"dcont": {"character": "?character", "desire": "?desire"}},
+	        "preconditions": [{"ownerIsKnown": {"cognizer": "?character",
+                                                                               "owner":"?owner", "object": "?desire"}},
+                                               {"dominates": {"agent": "?character", "patient": "?owner"}},
+                                               {"carries": {"agent": "?owner", "theme": "?desire"}},
+                                               {"is": {"performer": "?character", "role": "bully"}}],
+	   "subtasks": {"ordered": [{"dprox": {"character": "?character",
+                                                                       "objective": "?owner", "place": "?place"}},
+                                  {"tells": {"speaker": "?character", 
+				"addressee": "?owner", 
+				"message": {"desires": {"experiencer": "?character",
+						              "theme": {"carries": 
+      {"agent": "?character", 
+							                   "theme": "?desire"}}}}}},
+                                        {"threatens": {"speaker": "?character", "addressee": "?owner",
+                                                              "message": "?message"}},
+                                        {"surrenders": {"donor": "?owner", "theme": "?desire",
+                                                                 "recipient": "?character"}}]}}}
+
+	Note that both actions and methods have “task” slots.  These are the declaration of a function name (functor) and the arguments for the task that will be achieved if the action or method can be executed.  In this case, this is a “dcont” method, shorthand in the Schank and Abelson notation for “delta control,” a method for acquiring control of something.  Methods also have a preconditions slot.  Just as it is possible to list a number of deduction rules with the same name and arguments, it is possible to list a number of actions and methods with the same task description as alternative ways to get something done.  So, for example, dcont includes declarations for robbing, stealing, being given an object from a friend, bargaining, trading: essentially the repetoire originally implemented in Tale-Spin.
+In this definition of the dcont method, the owner of the desired object needs to be known: ownerIsKnown is a reference to a deduction rule that evaluates a set of conditions.  Each of these conditions could be separately listed in the preconditions slot, but a deduction rule provide a means to abstract and compose sets of preconditions.  Also, for this version of dcont to be applicable, the character applying the method needs to dominate the owner of the object; the character also needs to be a bully; and, the owner needs to be carrying the desired object.  If those preconditions are met, then a sequence of subtasks is attempted.  
+Each subtask can be fulfilled by either an action or another method.  Subtasks are either ordered, in which case they need to be explored in the order listed, or unordered, in which case they can be explored in any permutation.  Here the subtasks are first a dprox (delta proximity, the transportation of the character to the location of the owner which could be fulfilled by, for instance, flying (as declared above), walking, running, etc.); then a telling in which the character informs the owner of his/her desire to have what the owner possess; then the character threatens to do something bad to the owner (this can be fulfilled in various ways; various threats are generated; e.g., threatening to kill the owner, threatening to rob something else from the owner; etc.); then, the surrender of the object by the owner to the character.
+	Given an initial state (described as a set of terms), a set of rules, actions and methods, and a list of tasks, the planner produces a sequence of actions that accomplishes the tasks.  The mechanism that accomplishes the sequencing, the planner, is essentially an evaluator for the action and method language described above.  There are a myriad of planner types today (see Ghallab, Nau and Traverso, 2004).  One type that has proven practical for animating autonomous characters in computer games (see Kelly, Botea and Koenig, 2007) and for generating character discourse (see Strong and Mateas, 2008) has been Hierarchical Task Network (HTN) Planning, a technology that was developed for purposes other than games, dialog and narrative, recently, at the University of Maryland (see Nau et al, 2003).  The HTN planner for Spinner can be found in the file shop.js.
+	The HTN planner is implemented as a search through a state space where each state is represented as a database of assertions about the diegesis, the story world (e.g., Josephine is a bear and is currently in the cave).  Each time an action is executed the additions and deletions of the action change the database and thus form a new state to follow the preceding state.  One can understand this branching space of world states as sets of “possible worlds” as discussed in philosophy and literature (cf., Ryan, 1991).  The planner searches the state space by applying combinations of methods and actions until either all of the tasks have been fulfilled or no such state can be reached.  The general definition of search is implemented in the file utilities.js (see the function makeSearch).  The specifics of the planner’s search are implemented in the file shop.js (see the functions plan, initialize, refinePlan, and the variable planSearch).  This way of recasting a problem solving program as a search through an abstract state space is a well-known technique in AI (Nilsson, 1971).
+	The methods and actions language described above addresses the three remaining criteria for a language for story generators; namely, the means to (vi) define actions; (vii) define methods; and, (viii) define alternatives (i.e., disjuncts of actions or methods).  
+
