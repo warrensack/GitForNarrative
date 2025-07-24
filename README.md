@@ -164,7 +164,7 @@ Consequently, five of the eight key criteria for Tale-Spin-like story generators
 
 ## Planning
 
-What remains of our list of criteria are these: the means to 
+What remains of our list of criteria for a domain specific language for story generators are these: the means to 
 
 6. define actions (more commonly called *operators* in the planning literature);
 7. define methods; and,
