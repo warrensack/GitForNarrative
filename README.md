@@ -39,3 +39,48 @@ All of the data structures in Spinner are defined in JSON syntax.  However, ther
 ```
 In addition to this constraint on JSON sytax, there is also one extension to that syntax: *unification variables*.  A unification variable is written as a string prefixed with a question mark, like this: *“?what”*.  Variables can appear on the right hand side of any pair (but not on the left hand side).  
 
+## Unification
+
+Given two terms, each of which may include zero or more unification variables, the function *unifyPattern*s (in the file utilities.js), will try to match the predicates together.  *unifyPatterns* takes three arguments: two terms and a list of variable bindings.  Let us set the bindings to the empty object, to start with.  Type the following into the JavaScript Console after you have loaded the system (as described at the top of the spinner.js file). Note that the *“>”* is the prompt from the JavaScript interpreter, not something you type in:
+```JavaScript
+> var bindings = {};
+```
+Now, try this:
+```JavaScript
+> utils.unifyPatterns({"is": {"performer": "?name", "role": "?part"}},
+                                 {"is": {"performer": "joe", "role": "bear"}},
+                                 bindings);
+```
+The response from the JavaScript interpreter should be true.  Now try typing this:
+```JavaScript
+> utils.pp(bindings);
+```
+You should then see this:
+```JavaScript
+{
+   "?name":  "joe",
+   "?part":  "bear"
+}
+```
+In other words, after unification, the variable *“?name”* has been bound to the value *“joe”* and the variable *“?part”* has been bound to the value *“bear”*. Both terms can contain variables and so be patterns.  So, switching the position of the two terms, yields the same result, as does this, where there is a variable in the first term and a variable in the second term, rather than no variables in the first and two in the second. 
+```JavaScript
+> utils.unifyPatterns({"is": {"performer": "joe", "role": "?part"}},
+                      {"is": {"performer": "?name", "role": "bear"}},
+                      bindings);
+```
+Here is something to watch out for: if two terms have the same left hand side (e.g., in the examples above, that is “is”), then they will unify even if one term does not have all of the pairs of the other term. Thus, this returns true:
+```JavaScript
+> utils.unifyPatterns({"is": {"role": "?part"}},{"is": {"performer": "?name"}},bindings);
+```
+This can be the source of difficult bugs if one mistakenly writes something in JSON that is not a term because two unlike JSON objects (that are not terms) can unify.  So, this returns true:
+```JavaScript
+> utils.unifyPatterns({"a": "1", "b": "2"},
+                      {"x": "3", "y": "4"},
+                      bindings);
+```
+Two terms will not unify if they have a matching pair where the right hand side of the pair does not match.  Thus, this will return false:
+```JavaScript
+> utils.unifyPatterns({"is": {"performer": "joe", "role": "?part"}},
+                      {"is": {"performer": "irving", "role": "bear"}},
+                      bindings);
+```
