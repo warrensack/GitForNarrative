@@ -1,7 +1,7 @@
 # Spinner: A JavaScript Implementation of Tale-Spin
 ### Warren Sack <wsack@ucsc.edu> University of California, Santa Cruz
 In 2006, Noah Wardrip-Fruin was working on his book *Expressive Processing: Digital Fictions, Computer Games, and Software Studies* (MIT Press, 2010).  One chapter of that book is devoted to Tale-Spin and so, as part of his research, Noah dug up my 1992 translation of Micro-Talespin and posted it to the Electronic Literature Organization (ELO) website. His post is a succinct introduction to the program that emphasizes its connection to the arts and humanities: 
-<P>
+
 “James Meehan’s Tale-Spin, created as part of his 1976 dissertation, *The Metanovel: Writing Stories by Computer*, was the first major project in the area of story generation. Like one of Calvino’s invisible cities, it creates an alternate landscape in which the inhabits live in a manner evocatively different from our own — with all actions the result of plans, the locations of items only learned by convincing someone to tell you, and no one feeling an emotion without knowing it. Like Aesop’s fables, Tale-Spin’s view of human nature was communicated through the interactions of iconic animals. But unlike the worlds of Calvino or Aesop, Meehan’s world wasn’t simply described — it was made to operate. In fact, its operation, rather than its description, was Meehan’s primary work. (The text describing the world was produced by a bare-bones language generation program, called Mumble, designed primarily to fit in the small amount of memory left on the Yale AI lab’s computer system when Tale-Spin was already running.)  … In 1981 a simplified version of Tale-Spin was published as part of the book *Inside Computer Understanding: Five Programs Plus Miniatures*. This version, Micro-Talespin, was then translated into Common Lisp (a programming language used in many artificial intelligence projects) by Warren Sack in 1992. It includes the settings for five default stories, simple text output from Micro-Mumble, and also the ability to interact with the simulated world. The ELO website now hosts Sack’s version, which requires that the computer running it have Common Lisp installed. GNU CLISP is an implementation of Common Lisp that works on Unix, MacOS, and Windows machines. To experience Micro-Talespin, start Common Lisp, load Micro-Talespin, and then, at the “?” prompt, type: (micro-talespin-demo *story1*). Next, try starting up with one of the other five stories.” (http://eliterature.org/showcase/meehan-and-sacks-micro-talespin)."
   
 ## From Common Lisp to JavaScript: From Micro-Talespin to Spinner
@@ -12,10 +12,28 @@ The Common Lisp Micro-Talespin code was useful for teaching until Common Lisp be
    * production rules that add further consequences -- new assertions -- into the database when new assertations are added to the database; and,
 2. a planning language (shop.js) for encoding planning actions (aka operations) and combinations of actions (aka methods) that describe possible courses of action that a character can follow given a specified task.
 With these two domain-specific languages, one can write Spinner in about 2000 lines of code that define a set of assertations, deduction rules, production rules, planning actions, and planning methods: https://github.com/warrensack/GitForNarrative/blob/SpinnerInJavaScript/Spinner/spinner.js
-<P>
+
 Instead of inventing a new syntax for each of these languages, they are written in JSON.  The interpreters for both languages are written in JavaScript.  They both rely on a set of JavaScript functions defined in the file utilities.js.  My former graduate student, Fabiola Hanna (now a professor the New School, New York City) created a quick (25 minute) talk through of all of the code for Spinner that can be found here: https://www2.ucsc.edu/softwarearts/ Please watch Hanna's talk-though before delving into the code here.
-<P>
-There are some minor differences between the 2010 implementation and the code that is being shared here, in this GitHub repository; e.g., in JavaScript we now use const and let to declare variables rather than the JavaScript of 2010 when one used *var*; and, at the top of each file you will find a set of comments on how to employ the code in a webpage and, also, how to use it within the node.js interpreter.  All of the code shared here is written for node.js.  To use it in a webpage you will need to comment out the module.exports = ... declarations at the end of each file.
-<P>
+
+There are some minor differences between the 2010 implementation and the code that is being shared here, in this GitHub repository; e.g., in JavaScript we now use *const* and *let* to declare variables rather than the JavaScript of 2010 when one used *var*; and, at the top of each file you will find a set of comments on how to employ the code in a webpage and, also, how to use it within the node.js interpreter.  All of the code shared here is written for node.js.  To use it in a webpage you will need to comment out the *module.exports = ...* declarations at the end of each file.
+
 What follows is an introduction to the code.
-<P>
+
+## JSON 
+
+The *lingua franca* of data structures exchanged between websites and programming languages is JSON, the JavaScript Object Notation (http://www.json.org/). While other languages, have a variety of syntactic constructs for defining data structures, today, most programming languages suppose JSON, even languages that are not JavaScript.  JSON objects have a very simple syntax.  The empty object is denoted like this: *{}*.  Objects can be filled by zero or more pairs. A pair is written like this: *“name”: “warren sack”*, or this *“name”: [“warren”,”sack”]*, or this *“name”: {“first”: “warren”, “last”: “sack”}*.  So, an object describing someone can look like this:
+```JavaScript
+{“name”: {“first”: “warren”, “last”: “sack”},
+ “job”: “professor”,
+ “former students”: [{“first”: “fabiola”, “last”: “hanna”}],
+ “school”: “university of california”}
+```
+All of the data structures in Spinner are defined in JSON syntax.  However, there is one extra constraint on the Spinner data structures. We will call these data structures *terms* and they will be restricted to having one and only one pair in them.  However, as can be seen above (with the definition of the “name” pair) JSON objects can be nested, so there is no loss of expressivity.  To define the JSON structure above as a term, one would write it like this:
+```JavaScript
+{“person”: {“name”: {“first”: “warren”, “last”: “sack”},
+            “job”: “professor”,
+            “former students”: [{“first”: “fabiola”, “last”: “hanna”}],
+            “school”: “university of california”}}
+```
+In addition to this constraint on JSON sytax, there is also one extension to that syntax: *unification variables*.  A unification variable is written as a string prefixed with a question mark, like this: *“?what”*.  Variables can appear on the right hand side of any pair (but not on the left hand side).  
+
