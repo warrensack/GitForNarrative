@@ -48,8 +48,8 @@ Given two terms, each of which may include zero or more unification variables, t
 Now, try this:
 ```JavaScript
 > utils.unifyPatterns({"is": {"performer": "?name", "role": "?part"}},
-                                 {"is": {"performer": "joe", "role": "bear"}},
-                                 bindings);
+                      {"is": {"performer": "joe", "role": "bear"}},
+                      bindings);
 ```
 The response from the JavaScript interpreter should be true.  Now try typing this:
 ```JavaScript
