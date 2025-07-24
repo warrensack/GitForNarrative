@@ -240,3 +240,66 @@ The methods and actions language described above addresses the three remaining c
 7. define methods; and,
 8. define alternatives (i.e., disjuncts of actions or methods).  
 
+## Semantics
+
+One of the oddities of the many interesting programs that were written by Roger Schank’s students in the 1970s and 1980s at the Yale Artificial Intelligence Project was their usage of Schank’s eleven Conceptual Dependency (CD) “primitive acts.” It was considered reasonable, at the time, to imagine that any verb in any language could be decomposed into one of eleven *primitives* (e.g., *ptrans*, physical transfer, would suffice for walking, running, flying, riding, jumping, shipping, racing, etc.).  This was odd because, at the time, there were many other linguists and philosophers working on the topic of semantics and so Schank’s CDs were hardly the only possibility in sight (see, for example, Lyons, 1977a and 1977b).  Today, working outside of the context of the Yale AI Lab of the 1970s and 1980s, it is worthwhile to consider some of those alternatives.  
+
+In particular, the work of Charles Fillmore, a linguist who has been developing since the 1960s what he now calls “frame semantics” (Fillmore, 1968; and, Ruppenhofer et al., 2010).  If Schank was a minimalist, trying to shoehorn the semantics of all verbs into eleven primitive acts, Fillmore is a maximalist, coding the specifics of each verb into a “frame” that includes specific roles for each.  In syntax, when studying verbs, one distinguishes the “subject” and “object” roles.  In frame semantics, one identifies more specific, semantically meaningful, roles (called “frame elements”) for each verb.  Thus, the verb “to fly” has the roles “?self_mover”, “?source” and “?goal” that could occur in a sentence of this form: ?self_mover flew from ?source to ?goal; e.g., “The monarch butterfly flew from Canada to California.”  Related verbs employ similar or the same roles.  Thus, “to walk” and “to run” also employ the roles used in the definition of “to fly.”  Fillmore’s detailed analysis now covers much of the English language (currently 10,000 lexical units) and is available online at this URL: http://framenet.icsi.berkeley.edu/.
+
+One can download all of the verb frames from Fillmore’s website in XML format.  However, it is not difficult to translate XML into JSON.  In principle, this could be done automatically and systematically.  What appears in Spinner (specifically in the spinner.js and initial.js files) are some abbreviated JSON forms for Fillmore’s frames translated unsystematically by hand.  If one were to expand the Spinner system it would worthwhile translating all of Fillmore’s database into Spinner JSON terms.  In this manner, it is possible to rewrite Tale-Spin, and many of the other Schankian AI programs, without using Schank’s primitive acts as a basis for natural language semantics.
+
+## Institutions
+
+According to the Nobel prize winning economist Douglass North, “Institutions are the rules of the game in a society …  They are a guide to human interaction, so that when we wish to greet friends on the street, drive an automobile, buy oranges, borrow money, form a business, bury our dead, or whatever, we know … how to perform these tasks.” (North, 1990, pp. 3, 4, and 6).  Institutions can be formal (e.g., the U.S. Constitution) or informal (e.g., how to tell a story to a child).  Formal and/or computational models of institutions are also a burgeoning area of interest in a number of fields outside of the social sciences including the philosophy of language (e.g., Searle, 2010); multi-agent systems (e.g., Jennings, 1993); artificial intelligence as applied to legal reasoning (e.g., Fornara et al., 2008); and, web services (e.g., Singh and Huhns, 2005). What was not clear when Meehan was writing Tale-Spin was that the large bulk of it is an attempt to codify simple social institutions like how to get from place to place, how to bargain, beg, buy, or steal.  What is clear now is that to recode Tale-Spin, one can borrow from many other areas of research where institutions have been a focus. 
+
+For example, there is an emerging consensus across these various fields that institutions can be modeled as recurrent sets of commitments made by participants through speech acts (cf., Hewitt, 2007; Winograd and Flores, 1986).  In a sense, the actions and methods of Spinner encode a form of deontic logic (a logic of obligation, permission, and prohibition) that is implemented by adding and deleting commitments between characters to and from the database.  Thus, for example, methods like barter (see the spinner.js file) require that characters promise that a future event will occur (specifically the exchange of goods) before that event happens.  The promise action adds a commitment into the database that is resolved when the event (the exchange of goods) takes place.  The implementation of the promise action in Spinner is comparable to the  analysis of the philosopher John Searle gives in his 1969 book *Speech Acts* (Searle, 1969, p. X). That event is then implemented with an action that deletes the commitments from the database (see the definition of the gives action).  Many other speech acts have been formalized in this manner (e.g., Searle and Vanderveken. 1985; Vanderveken, 1990) and the philosophy of action has been extended to include the using of AI planning actions and methods (Bratman, Israel and Pollock , 1988).
+
+In his critique of Sheldon Klein’s story generator, Meehan states that the purpose of Tale-Spin is an examination of various forms of causality (physical, logical, social, psychological).  Institutional analysis in the social sciences, as it has developed since at least the early twentieth century (cf., Durkheim, 1982) provides a framework for exploring these various aspects of the everyday social world.  Tapping some of the insights from this past century of social science work would improve upon the planning methods and actions used in Tale-Spin.
+
+## Mumbler
+
+To render the database statements of Tale-Spin into English, Meehan threw together the Mumble program.  I have followed suit with the mumbler program, although it would be possible to do a better job.  One way to do this better would be, again, to more systematically employ Fillmore’s FrameNet database.  The FrameNet database includes thousands of sample sentences listed under the verb frames they illustrate and annotated with the semantic roles.  For example, the frame for self_motion verbs (run, walk, fly, etc.) includes the sample sentence “A dog ran up” with “dog” annotated with the “?self_mover” role and “up” annotated as the “?goal” (see the definition of the the action for the verb “to fly” given above). 
+These example sentences could be translated into many possible templates for rendering  the frames into English. Or, this might  be a good place to use an LLM to rewrite the output of Spinner in a more fluent form.
+
+For mumbler, I have simply thrown together a number of templates on my own, with no reference to the lexicographical research literature.  The code discussed in this section can be found in the file mumbler.js.  Here is one example, for the verb “to carry”:
+```JavaScript
+{"carries": 
+    {"agent": "?agent", "theme": "?theme",
+     "past": {"list": ["?agent","carried the","?theme"]},
+     "present": {"list": ["?agent","carries the","?theme"]},
+     "infinitive": {"list": ["?agent","to carry the","?theme"]},
+     "interrogative": {"list": ["will","?agent","carry the","?theme"]}}}
+```
+The first two lines of the template are used to match the Spinner term about a character carrying some object.  For instance, the first line would match this term:
+```JavaScript
+{"carries": {"agent":  "joe", "theme":  "honey"}}
+```
+The following four lines of a text template express the statement in different tenses.  The mumbler program, given a tense and a statement, will render the statement into English in the appropriate tense.  The above in the past tense would be rendered as “joe carried the honey.”  If a role is not instantiated (i.e., it is still a variable), then it is render as “something.”  It would make more sense to do a little more computation and render it as “someone” or “somewhere” or “something” depending on the context, but, again, that was neither Meehan’s focus nor the focus of this translation. 
+
+Very sophisticated work has been done on rendering the *syuzhet* from the *fabula* in more contemporary research such as Nick Montfort’s Curveship system: “Curveship can tell events out of order, using flashback and other techniques, and can tell the story from the standpoint of particular characters and their perceptions and understandings” (see Montfort, 2011).  Obviously, there is an enormous distance between mumbler and Curveship.
+
+In Spinner, statements can be nested one into another.  Some of the Mumbler text templates reflect this possibility.  For example, the first few lines of the template for “to inform” look like this:
+```JavaScript
+{"informs": 
+    {"informer": "?informer", "addressee": "?addressee", "message": "?message",
+     "past": {"list": ["?informer","informed","?addressee","that",
+		       {"past": {"assertion": "?message"}}]}}}
+```
+Note that the template includes a reference to another template: the {“past”: {“assertion”: “?message”}} statement directs Mumbler to render that part of “to inform” in the past tense.  Thus, to render this into English
+```JavaScript
+{"informs": {"informer":  "joe", "addressee":  "irving",
+	     "message": {"desires": {"experiencer": "joe", "theme": {"carries": {"agent": "joe",
+										 "theme": "honey"}}}}}}  
+```
+The “informs” template is called and the message (which begins with “desires”) is then rendered using the template for the verb “to desire” which, in term, needs to call the template for “carries” to finally output this: “joe informed irving that joe desired joe to carry the honey.”  Neither pronouns nor capitalization are supported by mumbler.
+
+A text template of this sort exists for task mentioned in a method or action, every deduction rule, and every functor used in a term that does or might occur in the Spinner database.  It is extensible.  **After adding a new verb or a new method to Spinner, one should also write a new text template for Mumbler so that the output can be rendered in English**.
+
+In addition to text templates, mumbler contains a simple transcoding system defined in a number of deduction rules.  The search states generated by the planner are rewritten as Spinner database terms and the deduction rules of Mumbler select portions of these search states to output in English.  The top-level rule is *{“narrate”: {“tense”: “?tense”}}*.  It calls two other rules.  The rule *narrateInitialState* gathers all of the assertions in the initial state and then outputs “once upon a time…” and then each assertion as an English sentence.  The rule *narratePathToSuccess* gathers together the sequence of states that led to the successful plan (and the tasks that transformed one state into another).  For each state in the path to a successful plan (excluding the initial state), the rule finds the task that was solved in that state (via a method or action) and records the task along with any database additions made at that point.  It output the task and the terms representing the additions into English.
+
+Mumbler is used in one other way in the Spinner program.  If the user wants what was called in micro-Talespin an “interactive” version of a story, the Mumbler program is used to pose questions to the user.  In micro-Talespin an “interactive” story called the function *find-out* if, during plan generation, a query returned false for statements about a character’s state (specifically, their state of hunger or thirst) and for statements concerning social relations between characters (e.g., “Does Joe like Irving?”).  Tale-Spin’s “interactive” mode is similar and, in my opinion, does not constitute an interesting form of interaction. 
+
+To duplicate this “interactivity” in Spinner, the user can replace the function *conjoin* (defined in the file llpl.js) with a different version of conjoin (defined in the file qa.js) which asks the user if a query is true or false after it has been found that the statement is not currently in the database.  If the user answers “yes” the statement is true, the statement is asserted into the database and the planner continues its work.  If the user responds to the qa.conjoin question with “no,” then the statement is recorded as having been negated and the planner continues it work. See the function *interactiveConjoin* defined in the file qa.js for details. The mumbler program is used in render the statements in question into the interrogative before they are printed out in English for the user to respond to.
+
+
+
