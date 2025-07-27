@@ -3,7 +3,6 @@ Warren Sack <wsack@ucsc.edu>
 
 What is metalinguistic abstraction?
 
-
 Metalinguistic abstraction is the design of new domain-specific programming languages.  The domain in focus today is narrative.
 
 Lyotard and Manovich, narrative versus database
